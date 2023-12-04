@@ -3,5 +3,6 @@ resolver = "2"
 members = [
     "aoc01_trebuchet",
     "aoc02_cube_conundrum",
+    "aoc03_gear_ratios",
     "sdk"
 ]

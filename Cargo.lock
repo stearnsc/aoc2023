@@ -32,6 +32,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc03_gear_ratios"
+version = "0.1.0"
+dependencies = [
+ "sdk",
+]
+
+[[package]]
 name = "bitflags"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
