@@ -1,5 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-    "aoc01_trebuchet"
+    "aoc01_trebuchet",
+    "sdk"
 ]
