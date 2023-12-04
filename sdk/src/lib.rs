@@ -1,3 +1,7 @@
+use std::fs::File;
+use std::io;
+use std::io::{BufRead, BufReader};
+use std::path::Path;
 pub use log::{trace, debug, info, warn, error};
 pub use anyhow::Result;
 pub use anyhow;
@@ -9,3 +13,8 @@ pub fn init() {
     pretty_env_logger::init();
 }
 
+pub fn lines(path: impl AsRef<Path>) -> Result<impl Iterator<Item=io::Result<String>>> {
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+    Ok(reader.lines())
+}
