@@ -4,5 +4,6 @@ members = [
     "aoc01_trebuchet",
     "aoc02_cube_conundrum",
     "aoc03_gear_ratios",
+    "aoc04_scratchcards",
     "sdk"
 ]
