@@ -5,5 +5,6 @@ members = [
     "aoc02_cube_conundrum",
     "aoc03_gear_ratios",
     "aoc04_scratchcards",
+    "aoc05_if_you_give",
     "sdk"
 ]
