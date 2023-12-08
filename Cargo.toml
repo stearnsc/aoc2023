@@ -7,5 +7,6 @@ members = [
     "aoc04_scratchcards",
     "aoc05_if_you_give",
     "aoc06_wait_for_it",
+    "aoc07_camel_cards",
     "sdk"
 ]
