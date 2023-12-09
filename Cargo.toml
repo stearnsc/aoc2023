@@ -8,5 +8,6 @@ members = [
     "aoc05_if_you_give",
     "aoc06_wait_for_it",
     "aoc07_camel_cards",
+    "aoc08_haunted_wasteland",
     "sdk"
 ]
