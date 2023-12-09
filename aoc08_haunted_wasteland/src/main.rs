@@ -1,13 +1,15 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Debug, Formatter};
-use std::fs;
+use std::{fs, iter};
+use std::cmp::max;
+use prime_factorization::Factorization;
 use sdk::*;
 use sdk::anyhow::anyhow;
 
 fn main() -> Result<()> {
     init();
     info!("Hello world");
-    let input = fs::read_to_string("aoc08_haunted_wasteland/example.txt")?;
+    let input = fs::read_to_string("aoc08_haunted_wasteland/input.txt")?;
     let (directions, body) = input.split_once('\n').ok_or(anyhow!("Unexpected input format - unable to split directions from network"))?;
     let directions = parse_directions(directions)?;
     let network = Network::parse(body.trim())?;
@@ -15,12 +17,21 @@ fn main() -> Result<()> {
     debug!("{network:?}");
 
     // Part 1
-    let steps = network.traverse_until(|n| n == &Node("AAA"), |n| n == &Node("ZZZ"), ListLoop::new(&directions).cloned());
-    info!("Steps from AAA to ZZZ: {steps:?}");
+    // let steps = network.traverse_until(|n| n == &Node("AAA"), |n| n == &Node("ZZZ"), ListLoop::new(&directions).cloned());
+    // info!("Steps from AAA to ZZZ: {steps:?}");
 
     // Part 2
-    let steps = network.traverse_until(|n| n.0.ends_with("A"), |n| n.0.ends_with("Z"), ListLoop::new(&directions).cloned());
-    info!("Steps from AXX to XXZ: {steps:?}");
+    let distances = network.compute_distances(|n| n.0.ends_with('A'), |n| n.0.ends_with('Z'), &directions);
+    let all_steps: Vec<_> = distances.into_iter()
+        .map(|(_, distances)| {
+            if distances.len() > 1 {
+                panic!("TODO");
+            }
+            distances[0] as u64
+        })
+        .collect();
+    let lcm = least_common_multiple(&all_steps);
+    info!("Least common multiple of distances from each node to XXZ: {lcm:?}");
 
     Ok(())
 }
@@ -78,6 +89,7 @@ impl<'a> Network<'a> {
         node
     }
 
+    // Part 1
     fn traverse_until(&'a self, is_start: impl Fn(&Node<'a>) -> bool, is_end: impl Fn(&Node<'a>) -> bool, directions: impl IntoIterator<Item=Direction>) -> Option<usize> {
         let mut steps = 0;
         let starts: Vec<_> = self.nodes.iter().filter(|n| is_start(n)).copied().collect();
@@ -106,6 +118,42 @@ impl<'a> Network<'a> {
             }
         }
         None
+    }
+
+    fn find_paths(&'a self, mut node: Node<'a>, directions: &[Direction], is_end: impl Fn(&Node<'a>) -> bool) -> Vec<usize> {
+        let start = node;
+        let mut paths = Vec::new();
+        let mut steps = 0;
+        // history of our traversal, with each node and where in the directions we were when we got there
+        let mut history: BTreeSet<(Node<'a>, usize)> = BTreeSet::new();
+        loop {
+            for (i, direction) in directions.iter().enumerate() {
+                if is_end(&node) {
+                    paths.push(steps);
+                }
+                if !history.insert((node, i)) {
+                    debug!("Paths for {start:?}: {paths:?}");
+                    // we have looped and are done
+                    return paths;
+                }
+                node = match direction {
+                    Direction::Left => *self.left(&node),
+                    Direction::Right => *self.right(&node),
+                };
+                steps += 1;
+            }
+        }
+    }
+
+    // Part 2
+    fn compute_distances(&'a self, is_start: impl Fn(&Node<'a>) -> bool, is_end: impl Fn(&Node<'a>) -> bool, directions: &[Direction]) -> BTreeMap<Node, Vec<usize>> {
+        let paths: BTreeMap<Node, Vec<usize>> = self.nodes
+            .iter()
+            .filter(|n| is_start(n))
+            .map(|n| (*n, self.find_paths(*n, directions, &is_end)))
+            .collect();
+        debug!("Paths: {paths:?}");
+        paths
     }
 
     fn left(&self, node: &Node<'a>) -> &Node {
@@ -143,6 +191,15 @@ enum Direction {
     Right,
 }
 
+impl Direction {
+    fn rev(self) -> Direction {
+        match self {
+            Direction::Left => Direction::Right,
+            Direction::Right => Direction::Left,
+        }
+    }
+}
+
 impl TryFrom<char> for Direction {
     type Error = anyhow::Error;
 
@@ -155,6 +212,7 @@ impl TryFrom<char> for Direction {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct ListLoop<'a, T> {
     list: &'a [T],
     i: usize,
@@ -180,4 +238,21 @@ impl<'a, T> Iterator for ListLoop<'a, T> {
         }
         Some(&self.list[next])
     }
+}
+
+pub fn least_common_multiple(numbers: &[u64]) -> u64 {
+    let mut total_factors = BTreeMap::new();
+    for n in numbers {
+        let mut factor_counts: BTreeMap<u64, u64> = BTreeMap::new();
+        let factors = Factorization::<u64>::run(*n);
+        for factor in factors.factors {
+            let count = factor_counts.entry(factor).or_default();
+            *count = *count + 1;
+        }
+        for (factor, count) in factor_counts {
+            let current_count = total_factors.entry(factor).or_default();
+            *current_count = max(count, *current_count);
+        }
+    }
+    total_factors.into_iter().flat_map(|(factor, count)| iter::repeat(factor).take(count as usize)).product()
 }
