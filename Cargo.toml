@@ -9,5 +9,6 @@ members = [
     "day06_wait_for_it",
     "day07_camel_cards",
     "day08_haunted_wasteland",
+    "day09_mirage_maintenance",
     "sdk"
 ]
