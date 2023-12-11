@@ -11,5 +11,6 @@ members = [
     "day08_haunted_wasteland",
     "day09_mirage_maintenance",
     "day10_pipe_maze",
+    "day11_cosmic_expansion",
     "sdk"
 ]
