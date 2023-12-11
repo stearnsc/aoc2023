@@ -1,7 +1,8 @@
+use std::fmt::Display;
 use std::fs::File;
-use std::io;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
+use std::process::Output;
 pub use log::{trace, debug, info, warn, error};
 pub use anyhow::Result;
 pub use anyhow;
@@ -13,8 +14,20 @@ pub fn init() {
     pretty_env_logger::init();
 }
 
-pub fn lines(path: impl AsRef<Path>) -> Result<impl Iterator<Item=io::Result<String>>> {
+pub fn lines(path: impl AsRef<Path>) -> Result<impl Iterator<Item=String>> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    Ok(reader.lines())
+    Ok(reader.lines().map(|l| l.expect("cannot read line")))
+}
+
+pub trait Solution<'a> {
+    type Input: 'a;
+
+    type Output: Display;
+
+    fn parse<'i: 'a>(input: impl Iterator<Item=&'i str>) -> Result<Self::Input>;
+
+    fn part_1(input: &Self::Input) -> Result<Output>;
+
+    fn part_2(input: &Self::Input) -> Result<Output>;
 }

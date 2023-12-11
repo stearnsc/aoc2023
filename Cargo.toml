@@ -10,5 +10,6 @@ members = [
     "day07_camel_cards",
     "day08_haunted_wasteland",
     "day09_mirage_maintenance",
+    "day10_pipe_maze",
     "sdk"
 ]
