@@ -12,5 +12,6 @@ members = [
     "day09_mirage_maintenance",
     "day10_pipe_maze",
     "day11_cosmic_expansion",
+    "day12_hot_springs",
     "sdk"
 ]
