@@ -13,5 +13,6 @@ members = [
     "day10_pipe_maze",
     "day11_cosmic_expansion",
     "day12_hot_springs",
+    "day13_point_of_incidence",
     "sdk"
 ]
