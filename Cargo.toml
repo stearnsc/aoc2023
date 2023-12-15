@@ -14,5 +14,6 @@ members = [
     "day11_cosmic_expansion",
     "day12_hot_springs",
     "day13_point_of_incidence",
+    "day14_parabolic_reflector",
     "sdk"
 ]
