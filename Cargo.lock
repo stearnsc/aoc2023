@@ -139,6 +139,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day15_lens_library"
+version = "0.1.0"
+dependencies = [
+ "sdk",
+]
+
+[[package]]
 name = "dotenvy"
 version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
