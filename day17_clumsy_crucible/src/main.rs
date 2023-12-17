@@ -13,7 +13,7 @@ fn main() -> Result<()> {
     debug!("{weights:?}");
     let start = (0, 0);
     let end = (weights.width - 1, weights.height - 1);
-    let costs = weights.costs(start, 3)?;
+    let costs = weights.costs(start, 4, 10)?;
     debug!("{costs}");
     let (end_x, end_y) = end;
     if let Some(min_cost) = costs.get(end_x, end_y) {
@@ -61,7 +61,7 @@ impl Weights {
         ].into_iter().flatten().collect()
     }
 
-    fn costs(&self, start: (usize, usize), max_run: usize) -> Result<Costs> {
+    fn costs(&self, start: (usize, usize), min_run: usize, max_run: usize) -> Result<Costs> {
         let (x, y) = start;
         if x >= self.width || y >= self.height {
             bail!("dest outside of weight map");
@@ -80,10 +80,12 @@ impl Weights {
                     if next_dir == dir {
                         let next_run = run + 1;
                         if next_run <= max_run {
-                            queue.push_back((neighbor, cost, next_dir, next_run));
+                            queue.push_back((neighbor, cost, next_dir, run + 1));
                         }
                     } else if next_dir != dir.reverse() {
-                        queue.push_back((neighbor, cost, next_dir, 1));
+                        if run >= min_run {
+                            queue.push_back((neighbor, cost, next_dir, 1));
+                        }
                     }
                 }
             }
