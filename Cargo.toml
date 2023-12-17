@@ -17,5 +17,6 @@ members = [
     "day14_parabolic_reflector",
     "day15_lens_library",
     "day16_floor_lava",
+    "day17_clumsy_crucible",
     "sdk"
 ]

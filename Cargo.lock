@@ -153,6 +153,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day17_clumsy_crucible"
+version = "0.1.0"
+dependencies = [
+ "sdk",
+]
+
+[[package]]
 name = "dotenvy"
 version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
