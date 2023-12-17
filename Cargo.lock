@@ -146,6 +146,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day16_floor_lava"
+version = "0.1.0"
+dependencies = [
+ "sdk",
+]
+
+[[package]]
 name = "dotenvy"
 version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
