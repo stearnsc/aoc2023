@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
@@ -32,3 +32,14 @@ pub trait Solution<'a> {
 
     fn part_2(input: &Self::Input) -> Result<Output>;
 }
+
+#[derive(Debug)]
+pub struct ParseError(pub String);
+
+impl Display for ParseError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Parse error: {}", self.0)
+    }
+}
+
+impl std::error::Error for ParseError {}
