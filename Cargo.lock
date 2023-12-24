@@ -175,6 +175,7 @@ version = "0.1.0"
 dependencies = [
  "colored",
  "hex",
+ "itertools 0.12.0",
  "sdk",
 ]
 
