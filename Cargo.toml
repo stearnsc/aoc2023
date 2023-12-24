@@ -19,5 +19,6 @@ members = [
     "day16_floor_lava",
     "day17_clumsy_crucible",
     "day18_lavaduct_lagoon",
+    "day19_aplenty",
     "sdk"
 ]
